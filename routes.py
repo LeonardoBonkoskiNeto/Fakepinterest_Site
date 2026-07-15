@@ -5,8 +5,10 @@ from flask import render_template
 def homepage():
     return render_template("homepage.html")
 
-@app.route("/perfil")
-def perfil():
-     return render_template("perfil.html")
+@app.route("/perfil/<browser>")
+def perfil(browser):
+     return render_template("perfil.html", browser=browser, idade=25)
+
+
 if __name__=="__main__":
     app.run(debug=True)
