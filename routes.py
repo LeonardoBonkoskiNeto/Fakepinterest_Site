@@ -1,5 +1,7 @@
-from main import app  
+from __main__ import app
 from flask import render_template
+
+print("ID do app em routes:", id(app))
 
 @app.route("/")
 def homepage():
@@ -7,8 +9,6 @@ def homepage():
 
 @app.route("/perfil/<browser>")
 def perfil(browser):
-     return render_template("perfil.html", browser=browser, idade=25)
+    return render_template("perfil.html", browser=browser, idade=25)
 
-
-if __name__=="__main__":
-    app.run(debug=True)
+print(app.url_map)

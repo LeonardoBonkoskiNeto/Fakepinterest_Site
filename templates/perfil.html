@@ -1,15 +1,19 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Perfil-Fakepinterest</title>
-</head>
+{% extends "homepage.html" %}
+
+{% block titulo %}
+
+Perfil - {{ browser }}
+
+{% endblock %}
+
+{% block body %}
+
 <body>
     <h1>{{ browser }}</h1>
     <p>idade: {{ idade }}</p>
 
-    
-    
+    <a href="{{ url_for('homepage')}}">saída</a>  
 </body>
-</html>
+
+{% endblock %}
+
