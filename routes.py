@@ -1,5 +1,6 @@
-from __main__ import app
-from flask import render_template
+
+from flask import render_template, url_for
+from Fakepinterest import app
 
 print("ID do app em routes:", id(app))
 
