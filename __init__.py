@@ -1,9 +1,11 @@
 
 from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
-print("ID do app em main:", id(app))
 
-print(app.url_map)
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///comunidade.db"
+
+database = SQLAlchemy(app)
 
 from Fakepinterest import routes
