@@ -1,6 +1,7 @@
 
 from flask import render_template, url_for
-from Fakepinterest import app
+from Fakepinterest import app, database, bcrypt
+from Fakepinterest.models import Usuario, foto
 from flask_login import login_required
 from Fakepinterest.forms import FormLogin, FormCriarConta
 
@@ -13,11 +14,18 @@ def homepage():
 
 @app.route("/criarconta", methods=["GET", "POST"])
 def criarconta():
-    formcriarconta = FormCriarConta()
-    return render_template("criarconta.html", form=formcriarconta)
+    form_criarconta = FormCriarConta()
+    if form_criarconta.validate_on_submit():
+        #bcrypt codifica a senha e da mais segurança
+        senha = bcrypt.generate_password_hash(form_criarconta.senha.data)
+        usuario = Usuario(username=form_criarconta.username.data, senha=senha, email=form_criarconta.email.data)
+        database.session.add(usuario)
+        database.session.commit()
+    return render_template("criarconta.html", form=form_criarconta)
 
 @app.route("/perfil/<browser>")
 @login_required
+
 def perfil(browser):
     return render_template("perfil.html", browser=browser, idade=25)
 
