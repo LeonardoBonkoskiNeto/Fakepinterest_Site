@@ -14,6 +14,20 @@
      <h1>Pinterest meu primeiro site no ar!!!!</h1>
      <p>agora vamos começar</p>
 
+     <form method="POST">
+        {{ form.csrf_token }}
+
+         {{ form.email.label() }}   
+         {{ form.email() }}
+
+          {{ form.email.label() }} 
+          {{ form.senha() }}
+
+          {{ form.botao_confirmacao() }}
+         
+
+     </form>
+     
      
 </body>
 {% endblock %}
