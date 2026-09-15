@@ -3,10 +3,14 @@ from flask import render_template, url_for, redirect
 from Fakepinterest import app, database, bcrypt
 from Fakepinterest.models import Usuario, foto
 from flask_login import login_required, login_user, logout_user, current_user
-from Fakepinterest.forms import FormLogin, FormCriarConta
+from Fakepinterest.forms import FormLogin, FormCriarConta, FormFoto
+import os
+from werkzeug.utils import secure_filename
 
 print("ID do app em routes:", id(app))
 
+
+#######DEFINIR METODOS#########
 @app.route("/", methods=["GET", "POST"])
 def homepage():
     form_login = FormLogin()
@@ -18,6 +22,7 @@ def homepage():
 
     return render_template("homepage.html", form=form_login)
 
+#######CRIAR CONTA#########
 @app.route("/criarconta", methods=["GET", "POST"])
 def criarconta():
     form_criarconta = FormCriarConta()
@@ -31,17 +36,31 @@ def criarconta():
         return redirect(url_for("perfil", id_usuario=usuario.id))
     return render_template("criarconta.html", form=form_criarconta)
 
-@app.route("/perfil/<id_usuario>")
+#######CRIAR PERFIL#########
+@app.route("/perfil/<id_usuario>", methods=["GET", "POST"])
 @login_required
 
 def perfil(id_usuario):
     if int(id_usuario) == int(current_user.id):
         #usuario vendo o proprio perfil
-        return render_template("perfil.html", usuario=current_user, idade=25)
+        form_foto = FormFoto()
+        if form_foto.validate_on_submit():
+            arquivo = form_foto.foto.data
+            nome_seguro = secure_filename(arquivo.filename)
+            #salvar o arquivo na pasta fotos_post
+            caminho = os.path.join(os.path.abspath(os.path.dirname(__file__)),
+                                app.config["UPLOAD_FOLDER"],  nome_seguro)
+            arquivo.save(caminho)
+            #registrar esse caminho no banco de dados
+            Foto = foto(imagem=nome_seguro, id_usuario=current_user.id)
+            database.session.add(Foto)
+            database.session.commit()
+        return render_template("perfil.html", usuario=current_user, form=form_foto)
     else:     
           usuario = Usuario.query.get(int(id_usuario))
-          return render_template("perfil.html", usuario=usuario, idade=25)
-
+          return render_template("perfil.html", usuario=usuario, form=None)
+    
+#######CRIAR LOGOUT#########
 @app.route("/logout")
 @login_required
 def logout():
@@ -49,3 +68,10 @@ def logout():
     return redirect(url_for("homepage"))
 
 print(app.url_map)
+
+#######CRIAR FEED#########
+@app.route("/feed")
+@login_required
+def feed():
+    fotos = None
+    return render_template("feed.html", fotos)
