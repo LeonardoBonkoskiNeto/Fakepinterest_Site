@@ -5,7 +5,7 @@
 
 <h1>Feed Principal</h1>
 
-{% for foto in usuario.fotos %}
+{% for foto in fotos %}
 <img src="{{ url_for('static', filename='fotos_post/{}'.format(foto.imagem)) }}">
 {% endfor %}
     

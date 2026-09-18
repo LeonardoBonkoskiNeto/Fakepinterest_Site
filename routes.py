@@ -73,5 +73,5 @@ print(app.url_map)
 @app.route("/feed")
 @login_required
 def feed():
-    fotos = None
-    return render_template("feed.html", fotos)
+    fotos = foto.query.order_by(foto.data_criacao.desc()).all()
+    return render_template("feed.html", fotos=fotos)
