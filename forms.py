@@ -1,6 +1,6 @@
 #criar formularios    
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField
+from wtforms import StringField, PasswordField, SubmitField, FileField
 from wtforms.validators import DataRequired, Email, EqualTo, Length, ValidationError
 from Fakepinterest.models import Usuario
 
@@ -23,3 +23,7 @@ class FormCriarConta(FlaskForm):
 
      if usuario:
          raise ValidationError("email já cadastrado, faça login para continuar")
+
+class FormFoto(FlaskForm):
+   foto = FileField("foto", validators=[DataRequired()])
+   botao_confirmacao = SubmitField("enviar")
